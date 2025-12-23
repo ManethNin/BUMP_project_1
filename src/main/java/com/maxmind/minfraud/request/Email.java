@@ -2,7 +2,7 @@ package com.maxmind.minfraud.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.maxmind.minfraud.AbstractModel;
-import org.apache.commons.codec.digest.DigestUtils;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.validator.routines.DomainValidator;
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -209,4 +209,25 @@ public final class Email extends AbstractModel {
     public String getDomain() {
         return domain;
     }
+}
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] hashBytes = md.digest(cleanAddress(address).getBytes(StandardCharsets.UTF_8));
+            return bytesToHex(hashBytes);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+private String bytesToHex(byte[] bytes) {
+    StringBuilder hexString = new StringBuilder();
+    for (byte b : bytes) {
+        String hex = Integer.toHexString(0xff & b);
+        if (hex.length() == 1) {
+            hexString.append('0');
+        }
+        hexString.append(hex);
+    }
+    return hexString.toString();
 }
