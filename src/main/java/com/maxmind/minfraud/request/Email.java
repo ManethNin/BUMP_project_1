@@ -2,7 +2,7 @@ package com.maxmind.minfraud.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.maxmind.minfraud.AbstractModel;
-import org.apache.commons.codec.digest.DigestUtils;
+import java.security.MessageDigest;
 import org.apache.commons.validator.routines.DomainValidator;
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -141,16 +141,16 @@ public final class Email extends AbstractModel {
     /**
      * @return The email address field to use in the transaction. This will be
      * a valid email address if you used {@link Builder#address(String)}, an MD5
-     * hash if you used {@link Builder#hashAddress()} as well, or null if you
+import java.nio.charset.StandardCharsets;
      * did not set an email address.
      */
     @JsonProperty("address")
     public String getAddress() {
         if (address == null) {
             return null;
+     * hash if you used {@link Builder#hashAddress()} as well, or null if you
         }
         if (hashAddress) {
-            return DigestUtils.md5Hex(cleanAddress(address));
         }
         return address;
     }
@@ -210,3 +210,20 @@ public final class Email extends AbstractModel {
         return domain;
     }
 }
+
+            return md5(cleanAddress(address));
+    private String md5(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] hashBytes = md.digest(input.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
