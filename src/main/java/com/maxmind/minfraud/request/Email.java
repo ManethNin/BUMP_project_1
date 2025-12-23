@@ -150,7 +150,7 @@ public final class Email extends AbstractModel {
             return null;
         }
         if (hashAddress) {
-            return DigestUtils.md5Hex(cleanAddress(address)).toLowerCase();
+            return DigestUtils.md5Hex(cleanAddress(address));
         }
         return address;
     }

@@ -46,7 +46,7 @@ public final class Account extends AbstractModel {
          * @return The builder object.
          */
         public Account.Builder username(String username) {
-            this.usernameMd5 = DigestUtils.md5Hex(username).toLowerCase();
+            this.usernameMd5 = DigestUtils.md5Hex(username);
             return this;
         }
 
