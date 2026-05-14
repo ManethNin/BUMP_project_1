@@ -222,3 +222,9 @@
         <version>7</version>
     </parent>
 </project>
+
+        <dependency>
+            <groupId>com.maxmind.db</groupId>
+            <artifactId>maxmind-db</artifactId>
+            <version>2.0.0</version>
+        </dependency>
